@@ -1,0 +1,19 @@
+# Ignore build artifacts
+1.0/bin/
+1.0/obj/
+
+# Ignore IDE files
+.vs/
+.vscode/
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Keep important files
+!1.0/*.png
+!1.0/*.dll
+!1.0/Plugin.cs
+!1.0/manifest.json
+!1.0/README.md
+!1.0/BackToBeastSigils.csproj
