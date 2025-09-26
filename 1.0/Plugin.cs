@@ -375,19 +375,19 @@ namespace BackToBeastSigils
         {
             Plugin.Log.LogInfo($"Tribe Life: Searching for replacement with tribe {tribe}");
 
-            // Méthode 1 : Chercher dans le deck du joueur
+            // Méthode 1 : Chercher dans le deck du joueur (et retirer la carte du deck)
             CardInfo deckCard = FindCardInDeck(tribe);
             if (deckCard != null)
             {
-                Plugin.Log.LogInfo($"Tribe Life: Found card in deck: {deckCard.name}");
+                Plugin.Log.LogInfo($"Tribe Life: Found card in deck: {deckCard.name} (removed from deck to avoid duplicates)");
                 return deckCard;
             }
 
-            // Méthode 2 : Chercher dans toutes les cartes du jeu
+            // Méthode 2 : Chercher dans toutes les cartes du jeu (pas besoin de retirer)
             CardInfo gameCard = FindCardInAllCards(tribe);
             if (gameCard != null)
             {
-                Plugin.Log.LogInfo($"Tribe Life: Found card in game: {gameCard.name}");
+                Plugin.Log.LogInfo($"Tribe Life: Found card in game collection: {gameCard.name} (no deck removal needed)");
                 return gameCard;
             }
 
@@ -400,13 +400,19 @@ namespace BackToBeastSigils
             var deck = Singleton<CardDrawPiles>.Instance.Deck;
             if (deck != null && deck.Cards != null && deck.Cards.Count > 0)
             {
-                foreach (var card in deck.Cards)
+                // Créer une liste des cartes à parcourir pour éviter la modification pendant l'itération
+                var deckCards = new System.Collections.Generic.List<CardInfo>(deck.Cards);
+                
+                foreach (var card in deckCards)
                 {
                     if (tribe == Tribe.None)
                     {
                         // Pour les cartes sans tribu, chercher d'autres cartes sans tribu
                         if (card.tribes == null || card.tribes.Count == 0)
                         {
+                            // IMPORTANT: Retirer la carte du deck pour éviter les doublons
+                            deck.Cards.Remove(card);
+                            Plugin.Log.LogInfo($"Tribe Life: Removed {card.name} from deck to avoid duplicates");
                             return card;
                         }
                     }
@@ -415,6 +421,9 @@ namespace BackToBeastSigils
                         // Pour les cartes avec tribu, chercher la même tribu
                         if (card.tribes != null && card.tribes.Contains(tribe))
                         {
+                            // IMPORTANT: Retirer la carte du deck pour éviter les doublons
+                            deck.Cards.Remove(card);
+                            Plugin.Log.LogInfo($"Tribe Life: Removed {card.name} from deck to avoid duplicates");
                             return card;
                         }
                     }
