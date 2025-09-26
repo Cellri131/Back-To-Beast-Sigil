@@ -1,6 +1,6 @@
 # Back To Beast Sigils
 
-Un mod Inscryption qui ajoute trois nouveaux sigils puissants pour enrichir votre expérience de jeu.
+Un mod Inscryption qui ajoute quatre nouveaux sigils puissants pour enrichir votre expérience de jeu.
 
 ## 📦 Installation
 
@@ -28,6 +28,12 @@ Un mod Inscryption qui ajoute trois nouveaux sigils puissants pour enrichir votr
 - **Description**: À la fin du tour, évolue aléatoirement si deux formes sont définies, sinon gagne +2 ATK ou +4 PV. Une seule fois par combat.
 - **Utilisation**: Évolution imprévisible ou amélioration des statistiques
 - **Niveau de puissance**: 3
+
+### 🏛️ Tribe Life
+- **ID**: `back.to.beast.sigils.TribeLife`
+- **Description**: Quand cette carte meurt, une carte de la même tribu prend sa place sur le plateau.
+- **Utilisation**: Continuité tribale et remplacement automatique
+- **Niveau de puissance**: 4
 
 ## 🎯 Utilisation dans vos cartes
 
@@ -61,6 +67,18 @@ Un mod Inscryption qui ajoute trois nouveaux sigils puissants pour enrichir votr
 }
 ```
 
+### Tribe Life - Continuité tribale
+```json
+{
+  "name": "IGCC_AlphaWolf",
+  "description": "Le chef de meute veille sur sa famille.",
+  "abilities": ["back.to.beast.sigils.TribeLife"],
+  "tribes": ["Canine"],
+  "baseAttack": 3,
+  "baseHealth": 2
+}
+```
+
 ## 🔧 Fonctionnalités techniques
 
 ### Strange Evolution - Modes de fonctionnement
@@ -77,6 +95,19 @@ Un mod Inscryption qui ajoute trois nouveaux sigils puissants pour enrichir votr
 - Ne s'active qu'une seule fois par combat par carte
 - Se déclenche à la fin de votre tour
 - Reset quand la carte est rejouée
+
+### Tribe Life - Système de remplacement
+
+**Ordre de priorité pour le remplacement**:
+1. **Deck du joueur** → Cherche une carte de la même tribu dans votre deck
+2. **Cartes du jeu** → Si aucune dans le deck, prend une carte aléatoire de la même tribu du jeu de base
+3. **Sans tribu** → Si la carte morte n'a pas de tribu, cherche une autre carte sans tribu
+
+**Mécaniques**:
+- Se déclenche avant l'animation de mort
+- Placement automatique dans le même slot
+- Compatible avec toutes les tribus (Canine, Bird, Insect, etc.)
+- Filtre les cartes problématiques ou spéciales
 
 ## 🛠️ Développement
 
