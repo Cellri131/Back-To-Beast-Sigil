@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "N3KMBD1ABEE=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\R_BAR\\AppData\\Roaming\\Thunderstore Mod Manager\\DataFolder\\Inscryption\\profiles\\m\\BepInEx\\plugins\\Back_To_Beast_Sigils\\1.0\\BackToBeastSigils.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\R_BAR\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\R_BAR\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

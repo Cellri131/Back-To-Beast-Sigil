@@ -1,0 +1,10 @@
+{
+  "name": "BackToBeastSigils",
+  "version_number": "1.0.0",
+  "website_url": "",
+  "description": "Adds the Ambidextrous sigil which allows drawing 2 cards when played on the board",
+  "dependencies": [
+    "BepInEx-BepInExPack_Inscryption-5.4.2100",
+    "API_dev-InscryptionAPI-2.20.1"
+  ]
+}
