@@ -79,6 +79,22 @@ namespace BackToBeastSigils
             StrangeEvolutionAbility.ability = strangeEvolutionInfo.ability;
 
             Log.LogInfo("Strange Evolution sigil has been added!");
+
+            // Créer le sigil Tribe Life
+            AbilityInfo tribeLifeInfo = AbilityManager.New(
+                PluginGuid,
+                "TribeLife", 
+                "Quand cette carte meurt, une carte de la même tribu prend sa place sur le plateau.",
+                typeof(TribeLifeAbility),
+                TextureHelper.GetImageAsTexture("tribe_life.png")
+            )
+            .SetDefaultPart1Ability()
+            .SetCanStack(false);
+
+            tribeLifeInfo.powerLevel = 4;
+            TribeLifeAbility.ability = tribeLifeInfo.ability;
+
+            Log.LogInfo("Tribe Life sigil has been added!");
         }
     }
 
@@ -291,6 +307,164 @@ namespace BackToBeastSigils
                 Plugin.Log.LogInfo("Strange Evolution: Reset activation flag on board placement!");
             }
             yield break;
+        }
+    }
+
+    // Classe qui définit le comportement du sigil Tribe Life
+    public class TribeLifeAbility : AbilityBehaviour
+    {
+        public static Ability ability;
+
+        public override Ability Ability
+        {
+            get
+            {
+                return ability;
+            }
+        }
+
+        // Se déclenche quand la carte meurt
+        public override bool RespondsToPreDeathAnimation(bool wasSacrifice)
+        {
+            return base.Card.OnBoard && !base.Card.OpponentCard;
+        }
+
+        // L'effet : remplacer par une carte de la même tribu
+        public override IEnumerator OnPreDeathAnimation(bool wasSacrifice)
+        {
+            yield return base.PreSuccessfulTriggerSequence();
+
+            Plugin.Log.LogInfo("Tribe Life: Card is dying, looking for replacement!");
+
+            // Sauvegarder le slot actuel avant que la carte meure
+            CardSlot currentSlot = base.Card.Slot;
+            
+            // Obtenir la tribu de la carte mourante
+            Tribe cardTribe = base.Card.Info.tribes.Count > 0 ? base.Card.Info.tribes[0] : Tribe.None;
+            
+            Plugin.Log.LogInfo($"Tribe Life: Card tribe is {cardTribe}");
+
+            // Attendre que l'animation de mort commence
+            yield return new WaitForSeconds(0.2f);
+
+            // Chercher une carte de remplacement
+            CardInfo replacementCard = FindReplacementCard(cardTribe);
+
+            if (replacementCard != null)
+            {
+                Plugin.Log.LogInfo($"Tribe Life: Found replacement card {replacementCard.name}");
+
+                // Attendre un peu puis placer la nouvelle carte
+                yield return new WaitForSeconds(0.5f);
+                
+                // Créer la nouvelle carte dans le slot
+                yield return Singleton<BoardManager>.Instance.CreateCardInSlot(replacementCard, currentSlot, 0.15f, true);
+                
+                Plugin.Log.LogInfo("Tribe Life: Replacement card placed successfully!");
+            }
+            else
+            {
+                Plugin.Log.LogWarning("Tribe Life: No replacement card found!");
+            }
+
+            yield return base.LearnAbility(0.1f);
+            yield break;
+        }
+
+        private CardInfo FindReplacementCard(Tribe tribe)
+        {
+            Plugin.Log.LogInfo($"Tribe Life: Searching for replacement with tribe {tribe}");
+
+            // Méthode 1 : Chercher dans le deck du joueur
+            CardInfo deckCard = FindCardInDeck(tribe);
+            if (deckCard != null)
+            {
+                Plugin.Log.LogInfo($"Tribe Life: Found card in deck: {deckCard.name}");
+                return deckCard;
+            }
+
+            // Méthode 2 : Chercher dans toutes les cartes du jeu
+            CardInfo gameCard = FindCardInAllCards(tribe);
+            if (gameCard != null)
+            {
+                Plugin.Log.LogInfo($"Tribe Life: Found card in game: {gameCard.name}");
+                return gameCard;
+            }
+
+            Plugin.Log.LogWarning("Tribe Life: No replacement card found anywhere!");
+            return null;
+        }
+
+        private CardInfo FindCardInDeck(Tribe tribe)
+        {
+            var deck = Singleton<CardDrawPiles>.Instance.Deck;
+            if (deck != null && deck.Cards != null && deck.Cards.Count > 0)
+            {
+                foreach (var card in deck.Cards)
+                {
+                    if (tribe == Tribe.None)
+                    {
+                        // Pour les cartes sans tribu, chercher d'autres cartes sans tribu
+                        if (card.tribes == null || card.tribes.Count == 0)
+                        {
+                            return card;
+                        }
+                    }
+                    else
+                    {
+                        // Pour les cartes avec tribu, chercher la même tribu
+                        if (card.tribes != null && card.tribes.Contains(tribe))
+                        {
+                            return card;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private CardInfo FindCardInAllCards(Tribe tribe)
+        {
+            // Obtenir toutes les cartes disponibles dans le jeu
+            var allCards = CardLoader.AllData;
+            var validCards = new System.Collections.Generic.List<CardInfo>();
+
+            foreach (var card in allCards)
+            {
+                // Ignorer les cartes spéciales, rares ou problématiques
+                if (card == null || string.IsNullOrEmpty(card.name) || 
+                    card.name.Contains("Empty") || card.name.Contains("Rare") ||
+                    card.name.Contains("!") || card.name.Contains("CHOICE"))
+                {
+                    continue;
+                }
+
+                if (tribe == Tribe.None)
+                {
+                    // Chercher des cartes sans tribu
+                    if (card.tribes == null || card.tribes.Count == 0)
+                    {
+                        validCards.Add(card);
+                    }
+                }
+                else
+                {
+                    // Chercher des cartes de la même tribu
+                    if (card.tribes != null && card.tribes.Contains(tribe))
+                    {
+                        validCards.Add(card);
+                    }
+                }
+            }
+
+            // Retourner une carte aléatoire parmi les valides
+            if (validCards.Count > 0)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, validCards.Count);
+                return validCards[randomIndex];
+            }
+
+            return null;
         }
     }
 }

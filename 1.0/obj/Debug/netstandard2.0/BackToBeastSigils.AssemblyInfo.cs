@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BackToBeastSigils")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b67ebf2227e8809457292a03f4b90962038f365b")]
 [assembly: System.Reflection.AssemblyProductAttribute("BackToBeastSigils")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BackToBeastSigils")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

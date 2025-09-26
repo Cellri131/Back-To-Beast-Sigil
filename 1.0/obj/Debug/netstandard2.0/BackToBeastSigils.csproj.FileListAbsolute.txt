@@ -92,3 +92,5 @@ C:\Users\R_BAR\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Inscryption\p
 C:\Users\R_BAR\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Inscryption\profiles\m\BepInEx\plugins\Back_To_Beast_Sigils\1.0\bin\Debug\netstandard2.0\hand_of_the_beast.png
 C:\Users\R_BAR\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Inscryption\profiles\m\BepInEx\plugins\Back_To_Beast_Sigils\1.0\bin\Debug\netstandard2.0\hand_of_nature.png
 C:\Users\R_BAR\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Inscryption\profiles\m\BepInEx\plugins\Back_To_Beast_Sigils\1.0\bin\Debug\netstandard2.0\strange_evolution.png
+C:\Users\R_BAR\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Inscryption\profiles\m\BepInEx\plugins\Back_To_Beast_Sigils\1.0\obj\Debug\netstandard2.0\BackToBeastSigils.sourcelink.json
+C:\Users\R_BAR\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Inscryption\profiles\m\BepInEx\plugins\Back_To_Beast_Sigils\1.0\bin\Debug\netstandard2.0\tribe_life.png
